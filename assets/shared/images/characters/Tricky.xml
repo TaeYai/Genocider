@@ -1,0 +1,16 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TextureAtlas imagePath="Tricky.png">
+	<!-- Created with Adobe Animate version 19.2.1.408 -->
+	<!-- http://www.adobe.com/products/animate.html -->
+	<SubTexture name="down0000" x="2" y="2" width="2060" height="2241" frameX="-49" frameY="-143" frameWidth="2214" frameHeight="2384"/>
+	<SubTexture name="down0001" x="2065" y="2" width="2054" height="2219" frameX="-66" frameY="-65" frameWidth="2214" frameHeight="2384"/>
+	<SubTexture name="down0002" x="4122" y="2" width="2071" height="2095" frameX="-110" frameY="-137" frameWidth="2214" frameHeight="2384"/>
+	<SubTexture name="down0003" x="2" y="2246" width="2214" height="2132" frameX="0" frameY="-88" frameWidth="2214" frameHeight="2384"/>
+	<SubTexture name="down0004" x="2219" y="2246" width="1985" height="2220" frameX="-87" frameY="0" frameWidth="2214" frameHeight="2384"/>
+	<SubTexture name="down0005" x="4207" y="2246" width="2027" height="2205" frameX="-64" frameY="0" frameWidth="2214" frameHeight="2384"/>
+	<SubTexture name="idle0000" x="6237" y="2246" width="1888" height="2530" frameX="-23" frameY="-178" frameWidth="1947" frameHeight="2712"/>
+	<SubTexture name="idle0001" x="2" y="4779" width="1894" height="2543" frameX="-13" frameY="-169" frameWidth="1947" frameHeight="2712"/>
+	<SubTexture name="idle0002" x="1899" y="4779" width="1886" height="2597" frameX="-17" frameY="-109" frameWidth="1947" frameHeight="2712"/>
+	<SubTexture name="idle0003" x="3788" y="4779" width="1885" height="2627" frameX="-15" frameY="-75" frameWidth="1947" frameHeight="2712"/>
+	<SubTexture name="idle0004" x="5676" y="4779" width="1899" height="2680" frameX="0" frameY="-30" frameWidth="1947" frameHeight="2712"/>
+</TextureAtlas>
