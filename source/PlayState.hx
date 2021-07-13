@@ -180,6 +180,7 @@ class PlayState extends MusicBeatState
 	private var totalNotesHitDefault:Float = 0;
 	private var totalPlayed:Int = 0;
 	private var ss:Bool = false;
+	public static var mania:Int = 0;
 
 
 	private var healthBarBG:FlxSprite;
@@ -1272,6 +1273,52 @@ class PlayState extends MusicBeatState
 
 		super.create();
 	}
+	function doStopSign(sign:Int = 0, fuck:Bool = false)
+		{
+			trace('sign ' + sign);
+			var daSign:FlxSprite = new FlxSprite(-600, -200);
+			// CachedFrames.cachedInstance.get('sign')
+	
+			daSign.frames = Paths.getSparrowAtlas('sign','Sign_Post_Mechanic');
+	
+			daSign.setGraphicSize(Std.int(daSign.width * 0.67));
+	
+			daSign.cameras = [camHUD];
+	
+			switch(sign)
+			{
+				case 0:
+					daSign.animation.addByPrefix('sign','Signature Stop Sign 1',24, false);
+					daSign.x = FlxG.width - 650;
+					daSign.angle = -90;
+					daSign.y = -300;
+				case 1:
+					/*daSign.animation.addByPrefix('sign','Signature Stop Sign 2',20, false);
+					daSign.x = FlxG.width - 670;
+					daSign.angle = -90;*/ // this one just doesn't work???
+				case 2:
+					daSign.animation.addByPrefix('sign','Signature Stop Sign 3',24, false);
+					daSign.x = FlxG.width - 780;
+					daSign.angle = -90;
+					if (FlxG.save.data.downscroll)
+						daSign.y = -395;
+					else
+						daSign.y = -980;
+				case 3:
+					daSign.animation.addByPrefix('sign','Signature Stop Sign 4',24, false);
+					daSign.x = FlxG.width - 1070;
+					daSign.angle = -90;
+					daSign.y = -145;
+			}
+			add(daSign);
+			daSign.flipX = fuck;
+			daSign.animation.play('sign');
+			daSign.animation.finishCallback = function(pog:String)
+				{
+					trace('ended sign');
+					remove(daSign);
+				}
+		}
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
 	{
@@ -3185,8 +3232,14 @@ class PlayState extends MusicBeatState
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.75;
 				case 'sick':
-					if (health < 2)
-						health += 0.1;
+					if (daNote.noteType == 1)
+						{
+							health -= 99;
+						}
+					else if (health < 2)
+						{
+						   health += 0.1;
+                        } 
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 1;
 					sicks++;
@@ -4128,6 +4181,7 @@ class PlayState extends MusicBeatState
 			tabising = true;
 			tabisinging();
 			iconP1.animation.play('tabi');
+			doStopSign(0);
 		  case 193:
 			whittysing = true;
 			whittysinging();
@@ -4281,6 +4335,7 @@ class PlayState extends MusicBeatState
 			tabising = false;
 			tabisinging();
 			iconP1.animation.play('whitty');
+			doStopSign(0);
 		case 1861:
 			tabising = true;
 			tabisinging();
@@ -4292,7 +4347,7 @@ class PlayState extends MusicBeatState
 			tabisinging();
 			whittyfsing = true;
 			whittyfriend();
-			
+			doStopSign(2);
 			iconP1.animation.play('whitty');
 		case 1867:
 			tabising = true;
@@ -4305,7 +4360,7 @@ class PlayState extends MusicBeatState
 			tabisinging();
 			whittyfsing = true;
 			whittyfriend();
-			
+			doStopSign(3);
 			iconP1.animation.play('whitty');
 		case 1923:
 			tabising = true;
@@ -4313,6 +4368,7 @@ class PlayState extends MusicBeatState
 			whittyfsing = true;
 			whittyfriend();
 			iconP1.animation.play('tabi');
+			doStopSign(2);
 		case 1956:
 			agotising = true;
 			agotisinging();
@@ -4404,6 +4460,11 @@ class PlayState extends MusicBeatState
 			
 		iconP1.updateHitbox();
 		iconP2.updateHitbox();
+		if (curBeat % gfSpeed == 0 && curSong == 'genocider')
+		{
+			camHUD.shake(0.01, 0.2);
+			FlxG.camera.shake(0.005, 0.2);
+		}
 
 		if (curBeat % gfSpeed == 0)
 		{

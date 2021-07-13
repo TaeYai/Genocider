@@ -93,6 +93,7 @@ class ChartingState extends MusicBeatState
 	var leftIcon:HealthIcon;
 	var rightIcon:HealthIcon;
 
+
 	private var lastNote:Note;
 	var claps:Array<Note> = [];
 
@@ -474,6 +475,12 @@ class ChartingState extends MusicBeatState
 	
 	function addNoteUI():Void
 	{
+		var noteStrum = getStrumTime(dummyArrow.y) + sectionStartTime();
+		var noteData = Math.floor(FlxG.mouse.x / GRID_SIZE);
+		var noteType = 0;
+		if (FlxG.keys.pressed.X)
+			trace('change');
+			noteType = 1;
 		tab_group_note = new FlxUI(null, UI_box);
 		tab_group_note.name = 'Note';
 
@@ -1187,6 +1194,7 @@ class ChartingState extends MusicBeatState
 		remove(gridBG);
 		gridBG = FlxGridOverlay.create(GRID_SIZE, GRID_SIZE, GRID_SIZE * 8, GRID_SIZE * _song.notes[curSection].lengthInSteps);
         add(gridBG);
+		
 
 		remove(gridBlackLine);
 		gridBlackLine = new FlxSprite(gridBG.x + gridBG.width / 2).makeGraphic(2, Std.int(gridBG.height), FlxColor.BLACK);
@@ -1238,6 +1246,16 @@ class ChartingState extends MusicBeatState
 			var daNoteInfo = i[1];
 			var daStrumTime = i[0];
 			var daSus = i[2];
+			var daNoteInfo = i[1];
+					var daStrumTime = i[0];
+					var daSus = i[2];
+					var daType = i[1];
+					var note:Note = new Note(daStrumTime, daNoteInfo, daType);
+					note.sustainLength = daSus;
+					note.setGraphicSize(GRID_SIZE, GRID_SIZE);
+					note.updateHitbox();
+					note.x = Math.floor(daNoteInfo * GRID_SIZE);
+					note.y = Math.floor(getYfromStrum((daStrumTime - sectionStartTime()) % (Conductor.stepCrochet * _song.notes[curSection].lengthInSteps)));
 
 			var note:Note = new Note(daStrumTime, daNoteInfo % 4,null,false,true);
 			note.sustainLength = daSus;

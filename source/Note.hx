@@ -28,16 +28,18 @@ class Note extends FlxSprite
 	public var isSustainNote:Bool = false;
 
 	public var noteScore:Float = 1;
+	public static var noteScale:Float;
 
 	public static var swagWidth:Float = 160 * 0.7;
 	public static var PURP_NOTE:Int = 0;
 	public static var GREEN_NOTE:Int = 2;
 	public static var BLUE_NOTE:Int = 1;
 	public static var RED_NOTE:Int = 3;
+	public var noteType:Int = 0;
 
 	public var rating:String = "shit";
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false)
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?noteType:Int = 0)
 	{
 		super();
 
@@ -46,6 +48,7 @@ class Note extends FlxSprite
 
 		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
+		
 
 		x += 50;
 		// MAKE SURE ITS DEFINITELY OFF SCREEN?
@@ -139,6 +142,24 @@ class Note extends FlxSprite
 				updateHitbox();
 				antialiasing = true;
 		}
+		if(noteType == 1){
+				
+				
+			frames = Paths.getSparrowAtlas('ALL_deathnotes');
+			animation.addByPrefix('greenScroll', 'Green Arrow');
+			animation.addByPrefix('redScroll', 'Red Arrow');
+			animation.addByPrefix('blueScroll', 'Blue Arrow');
+			animation.addByPrefix('purpleScroll', 'Purple Arrow');
+			animation.addByPrefix('whiteScroll', 'White Arrow');
+			animation.addByPrefix('yellowScroll', 'Green Arrow');
+			animation.addByPrefix('violetScroll', 'Red Arrow');
+			animation.addByPrefix('blackScroll', 'Blue Arrow');
+			animation.addByPrefix('darkScroll', 'Purple Arrow');
+			setGraphicSize(Std.int(width * noteScale));
+
+				x -= 170;
+				
+		}
 
 		switch (noteData)
 		{
@@ -213,6 +234,10 @@ class Note extends FlxSprite
 				// prevNote.setGraphicSize();
 			}
 		}
+		if (noteType == 1)
+			{
+				setGraphicSize(Std.int(width * 0.86));
+			}
 	}
 
 	override function update(elapsed:Float)
