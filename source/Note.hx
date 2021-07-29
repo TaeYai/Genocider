@@ -39,14 +39,15 @@ class Note extends FlxSprite
 
 	public var rating:String = "shit";
 
-	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?inCharter:Bool = false, ?noteType:Int = 0)
+	public function new(strumTime:Float, noteData:Int, ?prevNote:Note, ?sustainNote:Bool = false, ?noteType:Int = 0, ?inCharter:Bool = false)
 	{
 		super();
 
-		if (prevNote == null)
+		if (prevNote == null)	
 			prevNote = this;
+		this.noteType = noteType;
+		this.prevNote = prevNote; 
 
-		this.prevNote = prevNote;
 		isSustainNote = sustainNote;
 		
 
@@ -120,6 +121,22 @@ class Note extends FlxSprite
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
 				antialiasing = true;
+
+				if(noteType == 2)
+					{
+						 
+						 
+						 frames = Paths.getSparrowAtlas('notedead', 'shared');
+						 animation.addByPrefix('greenScroll', 'green');
+						 animation.addByPrefix('redScroll', 'red');
+						 animation.addByPrefix('blueScroll', 'blue');
+						 animation.addByPrefix('purpleScroll', 'purple');
+						 setGraphicSize(Std.int(width * 0.7));
+						 //x += 300;
+
+						 updateHitbox();
+				         antialiasing = true;
+					}
 			default:
 				frames = Paths.getSparrowAtlas('NOTE_assets');
 
@@ -141,23 +158,23 @@ class Note extends FlxSprite
 				setGraphicSize(Std.int(width * 0.7));
 				updateHitbox();
 				antialiasing = true;
-		}
-		if(noteType == 1){
-				
-				
-			frames = Paths.getSparrowAtlas('ALL_deathnotes');
-			animation.addByPrefix('greenScroll', 'Green Arrow');
-			animation.addByPrefix('redScroll', 'Red Arrow');
-			animation.addByPrefix('blueScroll', 'Blue Arrow');
-			animation.addByPrefix('purpleScroll', 'Purple Arrow');
-			animation.addByPrefix('whiteScroll', 'White Arrow');
-			animation.addByPrefix('yellowScroll', 'Green Arrow');
-			animation.addByPrefix('violetScroll', 'Red Arrow');
-			animation.addByPrefix('blackScroll', 'Blue Arrow');
-			animation.addByPrefix('darkScroll', 'Purple Arrow');
-			setGraphicSize(Std.int(width * noteScale));
+				if(noteType == 2)
+					{
+						 
+						 
+						 frames = Paths.getSparrowAtlas('notedead', 'shared');
+						 animation.addByPrefix('greenScroll', 'green');
+						 animation.addByPrefix('redScroll', 'red');
+						 animation.addByPrefix('blueScroll', 'blue');
+						 animation.addByPrefix('purpleScroll', 'purple');
+						 setGraphicSize(Std.int(width * 0.7));
+						 //x += 300;
+		 
 
-				x -= 170;
+						 updateHitbox();
+				         antialiasing = true;
+						 
+					}
 				
 		}
 
@@ -234,10 +251,6 @@ class Note extends FlxSprite
 				// prevNote.setGraphicSize();
 			}
 		}
-		if (noteType == 1)
-			{
-				setGraphicSize(Std.int(width * 0.86));
-			}
 	}
 
 	override function update(elapsed:Float)

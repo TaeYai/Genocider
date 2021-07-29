@@ -28,11 +28,17 @@ class Caching extends MusicBeatState
     var text:FlxText;
     var kadeLogo:FlxSprite;
 
+    var bg:FlxSprite;
+
 	override function create()
 	{
         FlxG.mouse.visible = false;
 
         FlxG.worldBounds.set(0,0);
+
+        bg = new FlxSprite().loadGraphic(Paths.image('loading'));
+        bg.alpha = 0;
+        bg.screenCenter();
 
         text = new FlxText(FlxG.width / 2, FlxG.height / 2 + 300,0,"Loading...");
         text.size = 34;
@@ -48,6 +54,7 @@ class Caching extends MusicBeatState
 
         kadeLogo.alpha = 0;
 
+        add(bg);
         add(kadeLogo);
         add(text);
 
@@ -70,6 +77,7 @@ class Caching extends MusicBeatState
         {
             var alpha = HelperFunctions.truncateFloat(done / toBeDone * 100,2) / 100;
             kadeLogo.alpha = alpha;
+            bg.alpha = alpha;
             text.alpha = alpha;
             text.text = "Loading... (" + done + "/" + toBeDone + ")";
         }
@@ -92,6 +100,20 @@ class Caching extends MusicBeatState
                 continue;
             images.push(i);
         }
+
+        for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/tabi")))
+            {
+                if (!i.endsWith(".png"))
+                    continue;
+                images.push(i);
+            }
+        
+        for (i in FileSystem.readDirectory(FileSystem.absolutePath("assets/shared/images/Tricky")))
+            {
+                if (!i.endsWith(".png"))
+                    continue;
+                images.push(i);
+            }
 
         trace("caching music...");
 

@@ -10,11 +10,16 @@ import flixel.math.FlxMath;
 import flixel.text.FlxText;
 import flixel.util.FlxColor;
 import lime.utils.Assets;
+import flixel.tweens.FlxTween;
 
 
 #if windows
 import Discord.DiscordClient;
 #end
+
+import flixel.FlxCamera;
+import openfl.filters.BitmapFilter;
+import openfl.filters.ShaderFilter;
 
 using StringTools;
 
@@ -32,7 +37,9 @@ class FreeplayState extends MusicBeatState
 	var lerpScore:Int = 0;
 	var intendedScore:Int = 0;
 	var combo:String = '';
+	
 
+	var chromeValue:Float = 0;
 	private var grpSongs:FlxTypedGroup<Alphabet>;
 	private var curPlaying:Bool = false;
 
@@ -172,10 +179,14 @@ class FreeplayState extends MusicBeatState
 	{
 		super.update(elapsed);
 
+		//setChrome(chromeValue);
+
 		if (FlxG.sound.music.volume < 0.7)
 		{
 			FlxG.sound.music.volume += 0.5 * FlxG.elapsed;
 		}
+
+		FlxG.camera.shake(0.005, 0.1);
 
 		lerpScore = Math.floor(FlxMath.lerp(lerpScore, intendedScore, 0.4));
 
@@ -338,7 +349,11 @@ class FreeplayState extends MusicBeatState
 			}
 		}
 	}
+
+		
+	
 }
+
 
 class SongMetadata
 {

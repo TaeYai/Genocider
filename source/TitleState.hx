@@ -328,7 +328,7 @@ class TitleState extends MusicBeatState
 						trace('outdated lmao! ' + returnedData[0] + ' != ' + MainMenuState.kadeEngineVer);
 						OutdatedSubState.needVer = returnedData[0];
 						OutdatedSubState.currChanges = returnedData[1];
-						FlxG.switchState(new OutdatedSubState());
+						FlxG.switchState(new MainMenuState());
 					}
 					else
 					{
@@ -401,73 +401,45 @@ class TitleState extends MusicBeatState
 		switch (curBeat)
 		{
 			case 1:
-				createCoolText(['ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
-			// credTextShit.visible = true;
+				createCoolText(['Original FNF By']);
 			case 3:
-				addMoreText('present');
-			// credTextShit.text += '\npresent...';
-			// credTextShit.addText();
+				createCoolText(['','ninjamuffin99', 'phantomArcade', 'kawaisprite', 'evilsk8er']);
 			case 4:
 				deleteCoolText();
-			// credTextShit.visible = false;
-			// credTextShit.text = 'In association \nwith';
-			// credTextShit.screenCenter();
-			case 5:
-				if (Main.watermarks)
 					createCoolText(['Kade Engine', 'by']);
-				else
-					createCoolText(['In Partnership', 'with']);
-			case 7:
-				if (Main.watermarks)
+			case 5:
 					addMoreText('KadeDeveloper');
-				else
-				{
-					addMoreText('Newgrounds');
-					ngSpr.visible = true;
-				}
-			// credTextShit.text += '\nNewgrounds';
-		   case 8:
+		   case 6:
 			   deleteCoolText();
 			   createCoolText(['MODS', 'by']);
-		   case 9:
+		   case 7:
 			   addMoreText('TaeYai');
-		   case 10:
+		   case 8:
 			   deleteCoolText();
 			   createCoolText(['CODE', 'by']);
-		   case 11:
+		   case 9:
 				addMoreText('TaeYai');
-		   case 12:
+		   case 10:
 			    deleteCoolText();
 				createCoolText(['BACKGROUND EDIT', 'by']);
-		   case 13:
+		   case 11:
 				addMoreText('TaeYai');
-			case 14:
+			case 12:
 				deleteCoolText();
 				createCoolText(['MUSIC MIX', 'by']);
-			case 15:
+			case 13:
 				addMoreText('OVER NAI');
-		   case 16:
+			case 14:
 				deleteCoolText();
-				ngSpr.visible = false;
-			// credTextShit.visible = false;
-
-			// credTextShit.text = 'Shoutouts Tom Fulp';
-			// credTextShit.screenCenter();
-			case 17:
 				createCoolText([curWacky[0]]);
 			// credTextShit.visible = true;
-			case 18:
+			case 15:
 				addMoreText(curWacky[1]);
-			// credTextShit.text += '\nlmao';
-			case 19:
+			case 16:
 				deleteCoolText();
-			// credTextShit.visible = false;
-			// credTextShit.text = "Friday";
-			// credTextShit.screenCenter();
-			case 20:
 				addMoreText('GENOCIDER');
 			// credTextShit.visible = true;
-			case 21:
+			case 17:
 				skipIntro();
 		}
 	}

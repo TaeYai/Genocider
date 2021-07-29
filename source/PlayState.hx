@@ -103,6 +103,7 @@ class PlayState extends MusicBeatState
 
 	var songLength:Float = 0;
 	var kadeEngineWatermark:FlxText;
+	var coolWatermark:FlxText;
 	
 	#if windows
 	// Discord RPC variables
@@ -151,6 +152,7 @@ class PlayState extends MusicBeatState
     var fire:FlxSprite;
 	var vignette:FlxSprite;
 	var red:FlxSprite;
+	var healthTxt:FlxText;
 
 	public var notes:FlxTypedGroup<Note>;
 	private var unspawnNotes:Array<Note> = [];
@@ -228,6 +230,9 @@ class PlayState extends MusicBeatState
 	var scoreTxt:FlxText;
 	var replayTxt:FlxText;
 
+	var siniFireBehind:FlxTypedGroup<SiniFire>;
+	var siniFireFront:FlxTypedGroup<SiniFire>;
+
 	public static var campaignScore:Int = 0;
 
 	var defaultCamZoom:Float = 1.05;
@@ -270,6 +275,7 @@ class PlayState extends MusicBeatState
 	override public function create()
 	{
 		instance = this;
+		health = 2;
 		
 		if (FlxG.save.data.fpsCap > 290)
 			(cast (Lib.current.getChildAt(0), Main)).setFPSCap(800);
@@ -837,6 +843,50 @@ class PlayState extends MusicBeatState
 					agotibg = new FlxSprite(-2000, -400).loadGraphic(Paths.image('tiky2'));
 					tabibg = new FlxSprite(-2000, -400).loadGraphic(Paths.image('tiky3'));
 					whittybg = new FlxSprite(-2000, -400).loadGraphic(Paths.image('tiky4'));
+
+					siniFireBehind = new FlxTypedGroup<SiniFire>();
+			        siniFireFront = new FlxTypedGroup<SiniFire>();
+
+					for (i in 0...2)
+						{
+							var daFire:SiniFire = new SiniFire(middle.x + (-2000 + (((95 * 10) / 2) * i)), middle.y + 180, true, false, 30, i * 10, 84);
+							daFire.antialiasing = true;
+							daFire.scrollFactor.set(0.9, 0.9);
+							daFire.scale.set(0.4, 1);
+							daFire.y += 50;
+							siniFireBehind.add(daFire);
+						}
+						
+						
+						var fire1:SiniFire = new SiniFire(middle.x + (-2000), middle.y + 600, true, false, 30);
+						fire1.antialiasing = true;
+						fire1.scrollFactor.set(0.9, 0.9);
+						fire1.scale.set(2.5, 1.5);
+						fire1.y -= fire1.height * 1.5;
+						fire1.flipX = true;
+						
+						var fire2:SiniFire = new SiniFire((fire1.x + fire1.width) + 400, middle.y + 1100, true, false, 30);
+						fire2.antialiasing = true;
+						fire2.scrollFactor.set(0.9, 0.9);
+						//fire2.scale.set(2.5, 1);
+						fire2.y -= fire2.height * 1;
+						
+						var fire3:SiniFire = new SiniFire((fire2.x + fire2.width) + 400, middle.y + 1100, true, false, 30);
+						fire3.antialiasing = true;
+						fire3.scrollFactor.set(0.9, 0.9);
+						//fire3.scale.set(2.5, 1);
+						fire3.y -= fire3.height * 1;
+						
+						var fire4:SiniFire = new SiniFire((fire3.x + fire3.width) + 400, middle.y + 1100, true, false, 30);
+						fire4.antialiasing = true;
+						fire4.scrollFactor.set(0.9, 0.9);
+						fire4.scale.set(1.5, 1.5);
+						fire4.y -= fire4.height * 1.5;
+			
+						siniFireFront.add(fire1);
+			            siniFireFront.add(fire2);
+			            siniFireFront.add(fire3);
+			            siniFireFront.add(fire4);		
 				}
 			default:
 			{
@@ -1001,6 +1051,8 @@ class PlayState extends MusicBeatState
 			add(agoti);
 			add(noagoti);
 			add(middle);
+			add(siniFireBehind);
+			add(siniFireFront);
 			add(tabi);
 			add(notabi);
 			add(top);
@@ -1127,17 +1179,18 @@ class PlayState extends MusicBeatState
 				songName.cameras = [camHUD];
 			}
 
-		healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
-		if (PlayStateChangeables.useDownscroll)
+			healthBarBG = new FlxSprite(0, FlxG.height * 0.9).loadGraphic(Paths.image('healthBar'));
+		if (FlxG.save.data.downscroll)
 			healthBarBG.y = 50;
 		healthBarBG.screenCenter(X);
 		healthBarBG.scrollFactor.set();
 		add(healthBarBG);
 
-		healthBar = new FlxBar(healthBarBG.x + 4, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width - 8), Std.int(healthBarBG.height - 8), this,
-			'health', 0, 2);
+		healthBar = new FlxBar(healthBarBG.x + 4 - healthBarBG.x - healthBarBG.x + 78, healthBarBG.y + 4, RIGHT_TO_LEFT, Std.int(healthBarBG.width * 2 - 8), Std.int(healthBarBG.height - 8), this,
+			'health', 0, 4);
 		healthBar.scrollFactor.set();
-		healthBar.createFilledBar(0xFFFF0000, 0xFF66FF33);
+		healthBar.createFilledBar(0x00000000, 0xFF66FF33);
+		//(0xFFFF0000, 0xFF66FF33);
 		// healthBar
 		add(healthBar);
 
@@ -1146,6 +1199,12 @@ class PlayState extends MusicBeatState
 		kadeEngineWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		kadeEngineWatermark.scrollFactor.set();
 		add(kadeEngineWatermark);
+
+		coolWatermark = new FlxText(4,healthBarBG.y + 10,0,"Mod By TaeYai\n" + "Song by OverNai" , 16);
+		coolWatermark.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		coolWatermark.scrollFactor.set();
+		add(coolWatermark);
+		coolWatermark.visible = true;
 
 		if (PlayStateChangeables.useDownscroll)
 			kadeEngineWatermark.y = FlxG.height * 0.9 + 45;
@@ -1162,6 +1221,16 @@ class PlayState extends MusicBeatState
 		scoreTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, FlxTextAlign.CENTER, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 
 		add(scoreTxt);
+
+		healthTxt = new FlxText(600,healthBarBG.y + 80,0, "", 20);
+		healthTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
+		healthTxt.scrollFactor.set();
+		healthTxt.screenCenter();
+		healthTxt.x -= 200;
+		if (!theFunne)
+			healthTxt.x -= 75;
+		healthTxt.y = healthBarBG.y + 70;
+		add(healthTxt);
 
 		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "REPLAY", 20);
 		replayTxt.setFormat(Paths.font("vcr.ttf"), 42, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
@@ -1194,8 +1263,10 @@ class PlayState extends MusicBeatState
 		healthBarBG.cameras = [camHUD];
 		iconP1.cameras = [camHUD];
 		iconP2.cameras = [camHUD];
+		healthTxt.cameras = [camHUD];
 		scoreTxt.cameras = [camHUD];
 		doof.cameras = [camHUD];
+		coolWatermark.cameras = [camHUD];
 		if (FlxG.save.data.songPosition)
 		{
 			songPosBG.cameras = [camHUD];
@@ -1273,52 +1344,7 @@ class PlayState extends MusicBeatState
 
 		super.create();
 	}
-	function doStopSign(sign:Int = 0, fuck:Bool = false)
-		{
-			trace('sign ' + sign);
-			var daSign:FlxSprite = new FlxSprite(-600, -200);
-			// CachedFrames.cachedInstance.get('sign')
 	
-			daSign.frames = Paths.getSparrowAtlas('sign','Sign_Post_Mechanic');
-	
-			daSign.setGraphicSize(Std.int(daSign.width * 0.67));
-	
-			daSign.cameras = [camHUD];
-	
-			switch(sign)
-			{
-				case 0:
-					daSign.animation.addByPrefix('sign','Signature Stop Sign 1',24, false);
-					daSign.x = FlxG.width - 650;
-					daSign.angle = -90;
-					daSign.y = -300;
-				case 1:
-					/*daSign.animation.addByPrefix('sign','Signature Stop Sign 2',20, false);
-					daSign.x = FlxG.width - 670;
-					daSign.angle = -90;*/ // this one just doesn't work???
-				case 2:
-					daSign.animation.addByPrefix('sign','Signature Stop Sign 3',24, false);
-					daSign.x = FlxG.width - 780;
-					daSign.angle = -90;
-					if (FlxG.save.data.downscroll)
-						daSign.y = -395;
-					else
-						daSign.y = -980;
-				case 3:
-					daSign.animation.addByPrefix('sign','Signature Stop Sign 4',24, false);
-					daSign.x = FlxG.width - 1070;
-					daSign.angle = -90;
-					daSign.y = -145;
-			}
-			add(daSign);
-			daSign.flipX = fuck;
-			daSign.animation.play('sign');
-			daSign.animation.finishCallback = function(pog:String)
-				{
-					trace('ended sign');
-					remove(daSign);
-				}
-		}
 
 	function schoolIntro(?dialogueBox:DialogueBox):Void
 	{
@@ -1631,6 +1657,8 @@ class PlayState extends MusicBeatState
 		previousFrameTime = FlxG.game.ticks;
 		lastReportedPlayheadPosition = 0;
 
+		coolWatermark.visible = true;
+
 		if (!paused)
 		{
 			FlxG.sound.playMusic(Paths.inst(PlayState.SONG.song), 1, false);
@@ -1773,7 +1801,8 @@ class PlayState extends MusicBeatState
 				else
 					oldNote = null;
 
-				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote);
+				var daType = songNotes[3];
+				var swagNote:Note = new Note(daStrumTime, daNoteData, oldNote, false, daType);
 
 				if (!gottaHitNote && PlayStateChangeables.Optimize)
 					continue;
@@ -1790,7 +1819,7 @@ class PlayState extends MusicBeatState
 				{
 					oldNote = unspawnNotes[Std.int(unspawnNotes.length - 1)];
 
-					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true);
+					var sustainNote:Note = new Note(daStrumTime + (Conductor.stepCrochet * susNote) + Conductor.stepCrochet, daNoteData, oldNote, true, daType);
 					sustainNote.scrollFactor.set();
 					unspawnNotes.push(sustainNote);
 
@@ -2104,6 +2133,8 @@ class PlayState extends MusicBeatState
 		perfectMode = false;
 		#end
 
+		healthTxt.text = ("Health: ") + Std.string(healthBar.percent * 2) + ("%");
+
 		if (PlayStateChangeables.botPlay && FlxG.keys.justPressed.ONE)
 			camHUD.visible = !camHUD.visible;
 
@@ -2153,6 +2184,7 @@ class PlayState extends MusicBeatState
 				iconP1.visible = false;
 				iconP2.visible = false;
 				scoreTxt.visible = false;
+				
 			}
 			else
 			{
@@ -2223,6 +2255,7 @@ class PlayState extends MusicBeatState
 		super.update(elapsed);
 
 		scoreTxt.text = Ratings.CalculateRanking(songScore,songScoreDef,nps,maxNPS,accuracy);
+		healthTxt.text = ("Health: ") + Std.string(healthBar.percent * 2) + ("%");
 
 		var lengthInPx = scoreTxt.textField.length * scoreTxt.frameHeight; // bad way but does more or less a better job
 
@@ -2283,8 +2316,9 @@ class PlayState extends MusicBeatState
 		iconP1.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01) - iconOffset);
 		iconP2.x = healthBar.x + (healthBar.width * (FlxMath.remapToRange(healthBar.percent, 0, 100, 100, 0) * 0.01)) - (iconP2.width - iconOffset);
 
-		if (health > 2)
-			health = 2;
+		if (health > 4)
+			health = 4;
+
 		if (healthBar.percent < 20)
 			iconP1.animation.curAnim.curFrame = 1;
 		else
@@ -2808,7 +2842,7 @@ class PlayState extends MusicBeatState
 						{
 							if (health>0)
 							{
-								health -= 0.0070;
+								health -= 0.0090;
 							}
 						}
 
@@ -2846,43 +2880,49 @@ class PlayState extends MusicBeatState
 					// daNote.y = (strumLine.y - (songTime - daNote.strumTime) * (0.45 * PlayState.SONG.speed));
 	
 					if ((daNote.mustPress && daNote.tooLate && !PlayStateChangeables.useDownscroll || daNote.mustPress && daNote.tooLate && PlayStateChangeables.useDownscroll) && daNote.mustPress)
-					{
-							if (daNote.isSustainNote && daNote.wasGoodHit)
+						switch (daNote.noteType) 
 							{
-								daNote.kill();
-								notes.remove(daNote, true);
-							}
-							else
-							{
-								if (loadRep && daNote.isSustainNote)
+						
+								case 0:
 								{
-									// im tired and lazy this sucks I know i'm dumb
-									if (findByTime(daNote.strumTime) != null)
-										totalNotesHit += 1;
+									if (daNote.isSustainNote && daNote.wasGoodHit)
+										{
+
+											daNote.kill();
+											notes.remove(daNote, true);
+											daNote.destroy();
+											
+										}
 									else
-									{
-										health -= 0.075;
-										vocals.volume = 0;
-										if (theFunne)
-											noteMiss(daNote.noteData, daNote);
-									}
-								}
-								else
-								{
-									health -= 0.075;
-									vocals.volume = 0;
-									if (theFunne)
-										noteMiss(daNote.noteData, daNote);
-								}
-							}
-		
-							daNote.visible = false;
-							daNote.kill();
-							notes.remove(daNote, true);
-						}
+										{
+											if (daNote.mustPress)
+											{
+												health -= 0.075;
+												vocals.volume = 0;
+												if (theFunne)
+													noteMiss(daNote.noteData, daNote);
+
+											}
+										}
 					
-				});
-			}
+										daNote.active = false;
+										daNote.visible = false;
+					
+										daNote.kill();
+										notes.remove(daNote, true);
+										daNote.destroy();
+								}
+								case 2: 
+								{
+									daNote.kill();
+									notes.remove(daNote, true);
+									daNote.destroy();
+								}
+									
+							}
+						
+					});
+				}
 
 		if (FlxG.save.data.cpuStrums)
 		{
@@ -3212,14 +3252,24 @@ class PlayState extends MusicBeatState
 					health -= 0.2;
 					ss = false;
 					shits++;
+					if (daNote.noteType == 2)
+						{
+							health -= 0.03;
+							FlxG.sound.play(Paths.sound('death'));
+						}
 					if (FlxG.save.data.accuracyMod == 0)
-						totalNotesHit -= 1;
+						totalNotesHit += 0.25;
 				case 'bad':
 					daRating = 'bad';
 					score = 0;
 					health -= 0.06;
 					ss = false;
 					bads++;
+					if (daNote.noteType == 2)
+						{
+							health -= 0.1;
+							FlxG.sound.play(Paths.sound('death'));
+						}
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.50;
 				case 'good':
@@ -3227,22 +3277,27 @@ class PlayState extends MusicBeatState
 					score = 200;
 					ss = false;
 					goods++;
-					if (health < 2)
-						health += 0.04;
-					if (FlxG.save.data.accuracyMod == 0)
-						totalNotesHit += 0.75;
-				case 'sick':
-					if (daNote.noteType == 1)
+					if (daNote.noteType == 2)
 						{
-							health -= 99;
+							health -= 1;
+							FlxG.sound.play(Paths.sound('death'));
 						}
-					else if (health < 2)
-						{
-						   health += 0.1;
-                        } 
+					if (health < 2)
+						health += 0.4;
+					if (FlxG.save.data.accuracyMod == 0)
+						totalNotesHit += 0.5;
+
+				case 'sick':
+					if (daNote.noteType == 2)
+					{
+						health -= 2;
+						FlxG.sound.play(Paths.sound('death'));
+					}
+					if (health < 2)
+						health += 0.7;
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 1;
-					sicks++;
+					    sicks++;
 			}
 
 			// trace('Wife accuracy loss: ' + wife + ' | Rating: ' + daRating + ' | Score: ' + score + ' | Weight: ' + (1 - wife));
@@ -4155,8 +4210,59 @@ class PlayState extends MusicBeatState
 		gf.playAnim('scared', true);
 	}
 
+
+
+	function doStopSign(sign:Int = 0, fuck:Bool = false)
+		{
+			trace('sign ' + sign);
+			var daSign:FlxSprite = new FlxSprite(-600, -200);
+			// CachedFrames.cachedInstance.get('sign')
+	
+			daSign.frames = Paths.getSparrowAtlas('Sign_Post_Mechanic');
+	
+			daSign.setGraphicSize(Std.int(daSign.width * 0.67));
+	
+			daSign.cameras = [camHUD];
+	
+			switch(sign)
+			{
+				case 0:
+					daSign.animation.addByPrefix('sign','Signature Stop Sign 1',24, false);
+					daSign.x = FlxG.width - 650;
+					daSign.angle = -90;
+					daSign.y = -300;
+				case 1:
+					/*daSign.animation.addByPrefix('sign','Signature Stop Sign 2',20, false);
+					daSign.x = FlxG.width - 670;
+					daSign.angle = -90;*/ // this one just doesn't work???
+				case 2:
+					daSign.animation.addByPrefix('sign','Signature Stop Sign 3',24, false);
+					daSign.x = FlxG.width - 780;
+					daSign.angle = -90;
+					if (FlxG.save.data.downscroll)
+						daSign.y = -395;
+					else
+						daSign.y = -980;
+				case 3:
+					daSign.animation.addByPrefix('sign','Signature Stop Sign 4',24, false);
+					daSign.x = FlxG.width - 1070;
+					daSign.angle = -90;
+					daSign.y = -145;
+			}
+			add(daSign);
+			daSign.flipX = fuck;
+			daSign.animation.play('sign');
+			daSign.animation.finishCallback = function(pog:String)
+				{
+					trace('ended sign');
+					remove(daSign);
+				}
+		}
+
 	var danced:Bool = false;
 	var stepOfLast = 0;
+
+	
 
 	override function stepHit()
 	{
@@ -4181,12 +4287,11 @@ class PlayState extends MusicBeatState
 			tabising = true;
 			tabisinging();
 			iconP1.animation.play('tabi');
-			doStopSign(0);
 		  case 193:
 			whittysing = true;
 			whittysinging();
 			tabising = false;
-			tabisinging();
+			tabisinging();		
 		case 258:
             whittysing = false;
 			whittysinging();
@@ -4322,6 +4427,10 @@ class PlayState extends MusicBeatState
 			tabisinging();
 		case 1637:
 			tikyhere();
+			doStopSign(2, true);
+			doStopSign(1);
+			doStopSign(0);
+			doStopSign(3);
 			whittysing = false;
 			whittysinging();
 			tabising = true;
@@ -4342,6 +4451,11 @@ class PlayState extends MusicBeatState
 			whittyfsing = true;
 			whittyfriend();
 			iconP1.animation.play('tabi');
+			doStopSign(0);
+			doStopSign(1);
+			doStopSign(2);
+			doStopSign(2);
+			doStopSign(3);
 		case 1864:
 			tabising = false;
 			tabisinging();
@@ -4355,12 +4469,15 @@ class PlayState extends MusicBeatState
 			whittyfsing = true;
 			whittyfriend();
 			iconP1.animation.play('tabi');
+			doStopSign(0);
+			doStopSign(1);
 		case 1890:
 			tabising = false;
 			tabisinging();
 			whittyfsing = true;
 			whittyfriend();
 			doStopSign(3);
+			doStopSign(1);
 			iconP1.animation.play('whitty');
 		case 1923:
 			tabising = true;
@@ -4368,7 +4485,10 @@ class PlayState extends MusicBeatState
 			whittyfsing = true;
 			whittyfriend();
 			iconP1.animation.play('tabi');
+			doStopSign(0);
+			doStopSign(1);
 			doStopSign(2);
+			doStopSign(3);
 		case 1956:
 			agotising = true;
 			agotisinging();
@@ -4396,6 +4516,8 @@ class PlayState extends MusicBeatState
 
 	var lightningStrikeBeat:Int = 0;
 	var lightningOffset:Int = 8;
+
+	
 
 	override function beatHit()
 	{
