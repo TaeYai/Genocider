@@ -161,6 +161,27 @@ class GhostTapOption extends Option
 	}
 }
 
+class THEEFFECT extends Option
+{
+	public function new(desc:String)
+	{
+		super();
+		description = desc;
+	}
+
+	public override function press():Bool
+	{
+		FlxG.save.data.opti = !FlxG.save.data.opti;
+		display = updateDisplay();
+		return true;
+	}
+
+	private override function updateDisplay():String
+	{
+		return FlxG.save.data.opti ? "OFF" : "ON";
+	}
+}
+
 class AccuracyOption extends Option
 {
 	public function new(desc:String)

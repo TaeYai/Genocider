@@ -314,11 +314,13 @@ class PlayState extends MusicBeatState
 		removedVideo = false;
 
 		#if windows
+		
 		executeModchart = FileSystem.exists(Paths.lua(songLowercase  + "/modchart"));
 		if (executeModchart)
 			PlayStateChangeables.Optimize = false;
 		#end
 		#if !cpp
+		if(!FlxG.save.data.opti)
 		executeModchart = false; // FORCE disable for non cpp targets
 		#end
 
@@ -1051,8 +1053,11 @@ class PlayState extends MusicBeatState
 			add(agoti);
 			add(noagoti);
 			add(middle);
-			add(siniFireBehind);
-			add(siniFireFront);
+			if(FlxG.save.data.opti)
+				{
+					add(siniFireBehind);
+					add(siniFireFront);
+				}
 			add(tabi);
 			add(notabi);
 			add(top);
@@ -1222,14 +1227,14 @@ class PlayState extends MusicBeatState
 
 		add(scoreTxt);
 
-		healthTxt = new FlxText(600,healthBarBG.y + 80,0, "", 20);
+		healthTxt = new FlxText(200,-600,-600, "", -600);
 		healthTxt.setFormat(Paths.font("vcr.ttf"), 16, FlxColor.WHITE, RIGHT, FlxTextBorderStyle.OUTLINE,FlxColor.BLACK);
 		healthTxt.scrollFactor.set();
 		healthTxt.screenCenter();
 		healthTxt.x -= 200;
 		if (!theFunne)
 			healthTxt.x -= 75;
-		healthTxt.y = healthBarBG.y + 70;
+		healthTxt.y = healthBarBG.y + 30;
 		add(healthTxt);
 
 		replayTxt = new FlxText(healthBarBG.x + healthBarBG.width / 2 - 75, healthBarBG.y + (PlayStateChangeables.useDownscroll ? 100 : -100), 0, "REPLAY", 20);
@@ -2842,7 +2847,7 @@ class PlayState extends MusicBeatState
 						{
 							if (health>0)
 							{
-								health -= 0.0090;
+								health -= 0.02;
 							}
 						}
 
@@ -3255,7 +3260,7 @@ class PlayState extends MusicBeatState
 					if (daNote.noteType == 2)
 						{
 							health -= 0.03;
-							FlxG.sound.play(Paths.sound('death'));
+							FlxG.sound.play(Paths.sound('death'), 0.5);
 						}
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.25;
@@ -3268,7 +3273,7 @@ class PlayState extends MusicBeatState
 					if (daNote.noteType == 2)
 						{
 							health -= 0.1;
-							FlxG.sound.play(Paths.sound('death'));
+							FlxG.sound.play(Paths.sound('death'), 0.5);
 						}
 					if (FlxG.save.data.accuracyMod == 0)
 						totalNotesHit += 0.50;
@@ -3290,7 +3295,7 @@ class PlayState extends MusicBeatState
 				case 'sick':
 					if (daNote.noteType == 2)
 					{
-						health -= 2;
+						health -= 1.5;
 						FlxG.sound.play(Paths.sound('death'));
 					}
 					if (health < 2)
@@ -4249,6 +4254,7 @@ class PlayState extends MusicBeatState
 					daSign.angle = -90;
 					daSign.y = -145;
 			}
+			if(FlxG.save.data.opti)
 			add(daSign);
 			daSign.flipX = fuck;
 			daSign.animation.play('sign');
@@ -4584,6 +4590,7 @@ class PlayState extends MusicBeatState
 		iconP2.updateHitbox();
 		if (curBeat % gfSpeed == 0 && curSong == 'genocider')
 		{
+			if(FlxG.save.data.opti)
 			camHUD.shake(0.01, 0.2);
 			FlxG.camera.shake(0.005, 0.2);
 		}

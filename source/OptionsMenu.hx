@@ -62,6 +62,9 @@ class OptionsMenu extends MusicBeatState
 			new ShowInput("Display every single input in the score screen."),
 			new Optimization("No backgrounds, no characters, centered notes, no player 2."),
 			new BotPlay("Showcase your charts and mods with autoplay."),
+		]),
+		new OptionCategory("OPTIMIZED", [
+			new THEEFFECT("TURN ON/OFF EFFECT")
 		])
 		
 	];
